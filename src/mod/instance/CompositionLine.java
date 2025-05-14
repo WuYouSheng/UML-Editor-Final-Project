@@ -44,10 +44,8 @@ public class CompositionLine extends JPanel
 		Point fpPrime;
 		Point tpPrime;
 		renewConnect();
-		fpPrime = new Point(fp.x - this.getLocation().x,
-				fp.y - this.getLocation().y);
-		tpPrime = new Point(tp.x - this.getLocation().x,
-				tp.y - this.getLocation().y);
+		fpPrime = new Point(fp.x - this.getLocation().x, fp.y - this.getLocation().y);
+		tpPrime = new Point(tp.x - this.getLocation().x, tp.y - this.getLocation().y);
 		g.setColor(Color.BLACK);
 		g.drawLine(fpPrime.x, fpPrime.y, tpPrime.x, tpPrime.y);
 		paintArrow(g, tpPrime);

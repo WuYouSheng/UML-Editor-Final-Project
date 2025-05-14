@@ -126,18 +126,15 @@ public class CanvasPanelHandler extends PanelHandler
 						Point p = e.getPoint();
 						p.x -= members.elementAt(i).getLocation().x;
 						p.y -= members.elementAt(i).getLocation().y;
-						if (groupIsSelect((GroupContainer) members.elementAt(i),
-								p))
+						if (groupIsSelect((GroupContainer) members.elementAt(i), p))
 						{
-							((GroupContainer) members.elementAt(i))
-									.setSelect(true);
+							((GroupContainer) members.elementAt(i)).setSelect(true);
 							selectComp.add(members.elementAt(i));
 							isSelect = true;
 						}
 						else
 						{
-							((GroupContainer) members.elementAt(i))
-									.setSelect(false);
+							((GroupContainer) members.elementAt(i)).setSelect(false);
 						}
 						break;
 					default:
@@ -160,8 +157,7 @@ public class CanvasPanelHandler extends PanelHandler
 			{
 				point.x -= container.getComponent(i).getLocation().x;
 				point.y -= container.getComponent(i).getLocation().y;
-				if (groupIsSelect((GroupContainer) container.getComponent(i),
-						point) == true)
+				if (groupIsSelect((GroupContainer) container.getComponent(i), point))
 				{
 					return true;
 				}

@@ -9,6 +9,7 @@ public class SelectComp extends JPanel implements IFuncComponent
 {
 	public SelectComp()
 	{
+
 	}
 	public void select()
 	{

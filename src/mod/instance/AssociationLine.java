@@ -75,8 +75,7 @@ public class AssociationLine extends JPanel
 		Point mtp = dPack.getTo();
 		from = (JPanel) dPack.getFromObj();
 		to = (JPanel) dPack.getToObj();
-		fromSide = new AreaDefine().getArea(from.getLocation(), from.getSize(),
-				mfp);
+		fromSide = new AreaDefine().getArea(from.getLocation(), from.getSize(), mfp);
 		toSide = new AreaDefine().getArea(to.getLocation(), to.getSize(), mtp);
 		renewConnect();
 		System.out.println("from side " + fromSide);

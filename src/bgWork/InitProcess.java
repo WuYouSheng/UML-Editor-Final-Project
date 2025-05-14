@@ -19,7 +19,7 @@ import bgWork.handler.PanelHandler;
 
 public class InitProcess
 {
-	protected String		version				= "1.1";
+	protected String		version				= "1.2 Modified By WYSH";
 	JFrame					mainFrame;
 	JPanel					mainPanel;
 	Vector <PanelHandler>	handlerList			= new Vector <>();

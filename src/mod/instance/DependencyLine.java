@@ -3,6 +3,8 @@ package mod.instance;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;  // 新增 Graphics2D 類別
+import java.awt.BasicStroke; // 新增 BasicStroke 類別
 import java.awt.Point;
 import java.awt.Polygon;
 
@@ -29,6 +31,7 @@ public class DependencyLine extends JPanel
     boolean				isSelect		= false;
     int					selectBoxSize	= 5;
     CanvasPanelHandler	cph;
+    float[]				dashPattern		= {5.0f, 5.0f};  // 虛線樣式的模式，5個像素實線，5個像素空白
 
     public DependencyLine(CanvasPanelHandler cph)
     {
@@ -48,12 +51,34 @@ public class DependencyLine extends JPanel
                 fp.y - this.getLocation().y);
         tpPrime = new Point(tp.x - this.getLocation().x,
                 tp.y - this.getLocation().y);
-        g.setColor(Color.BLACK);
-        g.drawLine(fpPrime.x, fpPrime.y, tpPrime.x, tpPrime.y);
-        paintArrow(g, tpPrime);
+
+        // 轉換為 Graphics2D 以使用進階繪圖功能
+        Graphics2D g2d = (Graphics2D) g;
+
+        // 儲存原始筆觸
+        BasicStroke originalStroke = (BasicStroke) g2d.getStroke();
+
+        // 設定虛線筆觸
+        BasicStroke dashedStroke = new BasicStroke(
+                1.0f,                  // 線條寬度
+                BasicStroke.CAP_BUTT,  // 線端樣式
+                BasicStroke.JOIN_MITER,// 線條連接處樣式
+                10.0f,                 // 連接處限制
+                dashPattern,           // 虛線模式
+                0.0f                   // 相位偏移
+        );
+
+        g2d.setStroke(dashedStroke);
+        g2d.setColor(Color.BLACK);
+        g2d.drawLine(fpPrime.x, fpPrime.y, tpPrime.x, tpPrime.y);
+
+        // 繪製箭頭前恢復實線筆觸（箭頭邊緣應為實線）
+        g2d.setStroke(originalStroke);
+        paintArrow(g2d, tpPrime);
+
         if (isSelect == true)
         {
-            paintSelect(g);
+            paintSelect(g2d);
         }
     }
 
@@ -75,6 +100,27 @@ public class DependencyLine extends JPanel
                 {point.x, point.x - arrowSize, point.x, point.x + arrowSize};
         int y[] =
                 {point.y + arrowSize, point.y, point.y - arrowSize, point.y};
+        switch (toSide)
+        {
+            case 0:
+                x = removeAt(x, 0);
+                y = removeAt(y, 0);
+                break;
+            case 1:
+                x = removeAt(x, 1);
+                y = removeAt(y, 1);
+                break;
+            case 2:
+                x = removeAt(x, 3);
+                y = removeAt(y, 3);
+                break;
+            case 3:
+                x = removeAt(x, 2);
+                y = removeAt(y, 2);
+                break;
+            default:
+                break;
+        }
         Polygon polygon = new Polygon(x, y, x.length);
         g.setColor(Color.WHITE);
         g.fillPolygon(polygon);
@@ -95,6 +141,7 @@ public class DependencyLine extends JPanel
         renewConnect();
         System.out.println("from side " + fromSide);
         System.out.println("to side " + toSide);
+        ;
     }
 
     void renewConnect()
@@ -140,6 +187,23 @@ public class DependencyLine extends JPanel
         {
             temp = null;
             System.err.println("getConnectPoint fail:" + side);
+        }
+        return temp;
+    }
+
+    int[] removeAt(int arr[], int index)
+    {
+        int temp[] = new int[arr.length - 1];
+        for (int i = 0; i < temp.length; i ++)
+        {
+            if (i < index)
+            {
+                temp[i] = arr[i];
+            }
+            else if (i >= index)
+            {
+                temp[i] = arr[i + 1];
+            }
         }
         return temp;
     }

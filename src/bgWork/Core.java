@@ -7,6 +7,8 @@ import Pack.TextRequest;
 import bgWork.handler.MenuBarHandler;
 import mod.instance.*;
 
+import java.awt.*;
+
 public class Core extends InitProcess
 {
 	public Core(CoreMgr cm)

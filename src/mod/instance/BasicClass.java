@@ -1,8 +1,6 @@
 package mod.instance;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -13,12 +11,14 @@ import mod.IFuncComponent;
 
 public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 {
-	Vector <String>		texts			= new Vector <>();
-	Dimension			defSize			= new Dimension(150, 25);
-	int					maxLength		= 20;
-	int					textShiftX		= 5;
-	boolean				isSelect		= false;
-	int					selectBoxSize	= 5;
+	Vector <String>		texts				= new Vector <>();
+	Dimension			defSize				= new Dimension(150, 25);
+	int					maxLength			= 20;
+	int					textShiftX			= 5;
+	boolean				isSelect			= false;
+	boolean				connectPortSelect	= false;
+	Point				connectPoint		= new Point(0,0);
+	int					selectBoxSize		= 5;
 	CanvasPanelHandler	cph;
 
 	public BasicClass(CanvasPanelHandler cph)
@@ -56,7 +56,7 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 						(int) (0 + (i + 0.8) * defSize.getHeight()));
 			}
 		}
-		if (isSelect == true)
+		if (isSelect)
 		{
 			paintSelect(g);
 		}
@@ -107,8 +107,21 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 
 	public void setSelect(boolean isSelect)
 	{
-		System.out.println(isSelect);
+		System.out.println("BasicClass Selected:"+isSelect);
 		this.isSelect = isSelect;
+	}
+	public void setConnectPortSelect(String ConnectPort){
+		System.out.println("Basic Class"+ConnectPort);
+		if (ConnectPort == "None"){
+			this.connectPortSelect = false;
+		}
+		else{
+			this.connectPortSelect = true;
+		}
+		//System.out.println(point);
+	}
+	public boolean ConnectPortSelect(){
+		return this.connectPortSelect;
 	}
 
 	@Override
@@ -116,14 +129,15 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 	{
 		gra.setColor(Color.BLACK);
 		gra.fillRect(this.getWidth() / 2 - selectBoxSize, 0, selectBoxSize * 2,
-				selectBoxSize);
+				selectBoxSize);//頂部
 		gra.fillRect(this.getWidth() / 2 - selectBoxSize,
 				this.getHeight() - selectBoxSize, selectBoxSize * 2,
-				selectBoxSize);
+				selectBoxSize);//底部
 		gra.fillRect(0, this.getHeight() / 2 - selectBoxSize, selectBoxSize,
-				selectBoxSize * 2);
+				selectBoxSize * 2);//左邊
 		gra.fillRect(this.getWidth() - selectBoxSize,
 				this.getHeight() / 2 - selectBoxSize, selectBoxSize,
-				selectBoxSize * 2);
+				selectBoxSize * 2);//右邊
 	}
+
 }

@@ -25,14 +25,14 @@ public class CPHActionListener extends HandlerActionListener
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e)
+	public void mousePressed(MouseEvent e)//拖曳不放開
 	{
 		from = e.getPoint();
 		fromObj = e.getComponent();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e)
+	public void mouseReleased(MouseEvent e)//拖曳放開
 	{
 		to = e.getPoint();
 		toObj = e.getComponent();
@@ -51,7 +51,7 @@ public class CPHActionListener extends HandlerActionListener
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e)
+	public void mouseClicked(MouseEvent e)//滑鼠單點擊
 	{
 		handler.ActionPerformed(e);
 	}

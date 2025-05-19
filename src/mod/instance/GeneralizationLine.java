@@ -51,7 +51,7 @@ public class GeneralizationLine extends JPanel
 		g.setColor(Color.BLACK);
 		g.drawLine(fpPrime.x, fpPrime.y, tpPrime.x, tpPrime.y);
 		paintArrow(g, tpPrime);
-		if (isSelect == true)
+		if (isSelect)
 		{
 			paintSelect(g);
 		}
@@ -116,7 +116,6 @@ public class GeneralizationLine extends JPanel
 		renewConnect();
 		System.out.println("from side " + fromSide);
 		System.out.println("to side " + toSide);
-		;
 	}
 
 	void renewConnect()

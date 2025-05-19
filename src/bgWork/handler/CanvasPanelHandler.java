@@ -1,11 +1,10 @@
 package bgWork.handler;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.net.PasswordAuthentication;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -19,9 +18,14 @@ import mod.instance.*;
 
 public class CanvasPanelHandler extends PanelHandler
 {
-	Vector <JPanel>	members		= new Vector <>();
-	Vector <JPanel>	selectComp	= new Vector <>();
-	int				boundShift	= 10;
+	Vector <JPanel>	members				= new Vector <>();
+	Vector <JPanel>	selectComp			= new Vector <>();
+	int				boundShift			= 10;
+	int				deviation_value		= 2; //selectBoxSize容許誤差
+	int				selectBoxSize		= 5 + deviation_value;
+	boolean			connectorSelect		= false;
+	Point			tempPoint			= new Point(0,0);
+	String			connectorDirection	= "";//TOP,BOTTOM,LEFT,RIGHT
 
 	public CanvasPanelHandler(JPanel Container, InitProcess process)
 	{
@@ -67,6 +71,7 @@ public class CanvasPanelHandler extends PanelHandler
 			default:
 				break;
 		}
+
 		repaintComp();
 	}
 
@@ -107,18 +112,22 @@ public class CanvasPanelHandler extends PanelHandler
 		selectComp = new Vector <>();
 		for (int i = 0; i < members.size(); i ++)
 		{
-			if (isInside(members.elementAt(i), e.getPoint()) == true
-					&& isSelect == false)
+
+			if (isInside(members.elementAt(i), e.getPoint()) && !isSelect)
 			{
 				switch (core.isFuncComponent(members.elementAt(i)))
 				{
 					case 0:
+						//System.out.println("Port : "+isConnectPort(members.elementAt(i),e.getPoint()));
 						((BasicClass) members.elementAt(i)).setSelect(true);
+						((BasicClass) members.elementAt(i)).setConnectPortSelect(isConnectPort(members.elementAt(i),e.getPoint()));
 						selectComp.add(members.elementAt(i));
 						isSelect = true;
 						break;
 					case 1:
+						//System.out.println("Port : "+isConnectPort(members.elementAt(i),e.getPoint()));
 						((UseCase) members.elementAt(i)).setSelect(true);
+						//((UseCase) members.elementAt(i)).setConnectPortSelect(isConnectPort(members.elementAt(i),e.getPoint()));
 						selectComp.add(members.elementAt(i));
 						isSelect = true;
 						break;
@@ -180,7 +189,7 @@ public class CanvasPanelHandler extends PanelHandler
 
 	boolean selectByDrag(DragPack dp)
 	{
-		if (isInSelect(dp.getFrom()) == true)
+		if (isInSelect(dp.getFrom()))
 		{
 			// dragging components
 			Dimension shift = new Dimension(dp.getTo().x - dp.getFrom().x,
@@ -304,7 +313,7 @@ public class CanvasPanelHandler extends PanelHandler
 		selectComp = new Vector <>();
 		for (int i = 0; i < members.size(); i ++)
 		{
-			if (isInside(jp, members.elementAt(i)) == true)
+			if (isInside(jp, members.elementAt(i)))
 			{
 				selectComp.add(members.elementAt(i));
 				setSelectAllType(members.elementAt(i), true);
@@ -325,7 +334,7 @@ public class CanvasPanelHandler extends PanelHandler
 		selectComp = new Vector <>();
 		for (int i = 0; i < members.size(); i ++)
 		{
-			if (isInside(jp, members.elementAt(i)) == false)
+			if (!isInside(jp, members.elementAt(i)))
 			{
 				selectComp.add(members.elementAt(i));
 				setSelectAllType(members.elementAt(i), true);
@@ -341,7 +350,7 @@ public class CanvasPanelHandler extends PanelHandler
 	{
 		for (int i = 0; i < selectComp.size(); i ++)
 		{
-			if (isInside(selectComp.elementAt(i), point) == true)
+			if (isInside(selectComp.elementAt(i), point))
 			{
 				return true;
 			}
@@ -353,11 +362,11 @@ public class CanvasPanelHandler extends PanelHandler
 	{
 		for (int i = 0; i < members.size(); i ++)
 		{
-			if (isInside(members.elementAt(i), dPack.getFrom()) == true)
+			if (isInside(members.elementAt(i), dPack.getFrom()))//From座標 在members裡面
 			{
 				dPack.setFromObj(members.elementAt(i));
 			}
-			if (isInside(members.elementAt(i), dPack.getTo()) == true)
+			if (isInside(members.elementAt(i), dPack.getTo()))//To座標 在members裡面
 			{
 				dPack.setToObj(members.elementAt(i));
 			}
@@ -372,7 +381,7 @@ public class CanvasPanelHandler extends PanelHandler
 		{
 			case 0:
 			case 1:
-				break;
+				break;//沒有東西直接忽略
 			default:
 				switch (core.isLine(funcObj))
 				{
@@ -398,7 +407,7 @@ public class CanvasPanelHandler extends PanelHandler
 
 	void addObject(JPanel funcObj, Point point)
 	{
-		if (members.size() > 0)
+		if (!members.isEmpty())
 		{
 			members.insertElementAt(funcObj, 0);
 		}
@@ -413,8 +422,8 @@ public class CanvasPanelHandler extends PanelHandler
 
 	public boolean isInside(JPanel container, Point point)
 	{
-		Point cLocat = container.getLocation();
-		Dimension cSize = container.getSize();
+		Point cLocat = container.getLocation();//取得 JPanel物件 的左上角座標 (x, y)
+		Dimension cSize = container.getSize();//取得 JPanel 的寬度 (width) 和高度 (height)
 		if (point.x >= cLocat.x && point.y >= cLocat.y)
 		{
 			if (point.x <= cLocat.x + cSize.width
@@ -428,14 +437,24 @@ public class CanvasPanelHandler extends PanelHandler
 
 	public boolean isInside(JPanel container, JPanel test)
 	{
-		Point cLocat = container.getLocation();
-		Dimension cSize = container.getSize();
-		Point tLocat = test.getLocation();
-		Dimension tSize = test.getSize();
+		Point cLocat = container.getLocation();//取得 container 的左上角 (x, y) 座標
+		Dimension cSize = container.getSize();//取得 container 的寬度 (width) 和高度 (height)。
+		Point tLocat = test.getLocation();//取得 test 的左上角 (x, y) 座標。
+		Dimension tSize = test.getSize();//取得 test 的寬度 (width) 和高度 (height)。
 		if (cLocat.x <= tLocat.x && cLocat.y <= tLocat.y)
 		{
 			if (cLocat.x + cSize.width >= tLocat.x + tSize.width
 					&& cLocat.y + cSize.height >= tLocat.y + tSize.height)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean isInside(Point Base,Point Check, int width, int height){
+		if (Base.x <= Check.x && Base.y <= Check.y)
+		{
+			if (Base.x + width >= Check.x && Base.y + height >= Check.y)
 			{
 				return true;
 			}
@@ -534,4 +553,89 @@ public class CanvasPanelHandler extends PanelHandler
 		}
 		return location;
 	}
+	public String isConnectPort(JPanel funcObj, Point point){
+		this.connectorSelect = false;
+		this.tempPoint.x = 0;
+		this.tempPoint.y = 0;
+		Map<String,Integer> port_member = new HashMap<>();
+		Point cLocat = funcObj.getLocation();//取得 container 的左上角 (x, y) 座標
+		Dimension cSize = funcObj.getSize();//取得 container 的寬度 (width) 和高度 (height)
+		Point TOP_CENTER = new Point(0,0);
+		Point BOTTOM_CENTER = new Point(0,0);
+		Point LEFT_CENTER = new Point(0,0);
+		Point RIGHT_CENTER = new Point(0,0);
+
+		TOP_CENTER.x = cLocat.x + cSize.width/2 - selectBoxSize;
+		TOP_CENTER.y = cLocat.y - selectBoxSize/2;
+		boolean TOP_flag = borderCheck(TOP_CENTER,point,selectBoxSize*2,selectBoxSize);
+		if (TOP_flag) port_member.put("TOP_flag", 1);
+		else port_member.put("TOP_flag",0);
+
+		BOTTOM_CENTER.x = TOP_CENTER.x;
+		BOTTOM_CENTER.y = cLocat.y + cSize.height - selectBoxSize/2;
+		boolean BOTTOM_flag = borderCheck(BOTTOM_CENTER,point,selectBoxSize*2,selectBoxSize);
+		if (BOTTOM_flag) port_member.put("BOTTOM_flag", 1);
+		else port_member.put("BOTTOM_flag",0);
+
+		LEFT_CENTER.x = cLocat.x - selectBoxSize/2;
+		LEFT_CENTER.y = cLocat.y + cSize.height/2 - selectBoxSize;
+		boolean LEFT_flag = borderCheck(LEFT_CENTER, point, selectBoxSize,selectBoxSize*2);
+		if (LEFT_flag) port_member.put("LEFT_flag", 1);
+		else port_member.put("LEFT_flag",0);
+
+		RIGHT_CENTER.x = cLocat.x + cSize.width - selectBoxSize/2;
+		RIGHT_CENTER.y = LEFT_CENTER.y;
+		boolean RIGHT_flag = borderCheck(RIGHT_CENTER, point, selectBoxSize,selectBoxSize*2);
+		if (RIGHT_flag) port_member.put("RIGHT_flag", 1);
+		else port_member.put("RIGHT_flag",0);
+
+		if (port_member.getOrDefault("TOP_flag", 0) == 1) {
+			this.connectorSelect = true;
+			this.tempPoint = TOP_CENTER;
+			this.connectorDirection = "TOP";
+			return "TOP";
+		} else if (port_member.getOrDefault("BOTTOM_flag", 0) == 1) {
+			this.connectorSelect = true;
+			this.tempPoint = BOTTOM_CENTER;
+			this.connectorDirection = "BOTTOM";
+			return "BOTTOM";
+		} else if (port_member.getOrDefault("LEFT_flag", 0) == 1) {
+			this.connectorSelect = true;
+			this.tempPoint = LEFT_CENTER;
+			this.connectorDirection = "LEFT";
+			return "LEFT";
+		} else if (port_member.getOrDefault("RIGHT_flag", 0) == 1) {
+			this.connectorSelect = true;
+			this.tempPoint = RIGHT_CENTER;
+			this.connectorDirection = "RIGHT";
+			return "RIGHT";
+		} else {
+			return "None";
+		}
+    }
+	private boolean borderCheck(Point left_top, Point point, int border_width, int border_height){
+		if (point.x >= left_top.x && point.y >= left_top.y)
+		{
+			if (point.x <= left_top.x + border_width
+					&& point.y <= left_top.y + border_height)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean ConnectorSelect(){
+		//System.out.println("CPH"+connectorSelect);
+		return connectorSelect;
+	}
+	public Point getConnectPortSelectedLocation(){
+		return this.tempPoint;
+	}
+	public String getConnectorPortSelectedDirection(){
+		return this.connectorDirection;
+	}
+	public int getSelectCompNumber(){
+		return this.selectComp.size();
+	}
+
 }

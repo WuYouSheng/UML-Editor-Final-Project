@@ -54,4 +54,32 @@ public class AreaDefine
 				return OUT_SIDE;
 		}
 	}
+
+	public Point getSideCenter(Point rectLocat, Dimension rectSize,Point click) {
+
+		Point center = new Point(rectLocat.x + rectSize.width / 2, rectLocat.y + rectSize.height / 2);
+		Point result = new Point(0, 0);
+
+		switch (getArea(rectLocat,rectSize,click)) {
+			case TOP:
+				result.x = center.x;
+				result.y = rectLocat.y;
+				break;
+			case BOTTOM:
+				result.x = center.x;
+				result.y = rectLocat.y + rectSize.height;
+				break;
+			case LEFT:
+				result.x = rectLocat.x;
+				result.y = center.y;
+				break;
+			case RIGHT:
+				result.x = rectLocat.x + rectSize.width;
+				result.y = center.y;
+				break;
+			default:
+				return null; // 如果 side 無效，回傳 null
+		}
+		return result;
+	}
 }

@@ -353,11 +353,11 @@ public class CanvasPanelHandler extends PanelHandler
 	{
 		for (int i = 0; i < members.size(); i ++)
 		{
-			if (isInside(members.elementAt(i), dPack.getFrom()) == true)
+			if (isInside(members.elementAt(i), dPack.getFrom()) == true)//From座標 在members裡面
 			{
 				dPack.setFromObj(members.elementAt(i));
 			}
-			if (isInside(members.elementAt(i), dPack.getTo()) == true)
+			if (isInside(members.elementAt(i), dPack.getTo()) == true)//To座標 在members裡面
 			{
 				dPack.setToObj(members.elementAt(i));
 			}
@@ -372,7 +372,7 @@ public class CanvasPanelHandler extends PanelHandler
 		{
 			case 0:
 			case 1:
-				break;
+				break;//沒有東西直接忽略
 			default:
 				switch (core.isLine(funcObj))
 				{
@@ -413,8 +413,8 @@ public class CanvasPanelHandler extends PanelHandler
 
 	public boolean isInside(JPanel container, Point point)
 	{
-		Point cLocat = container.getLocation();
-		Dimension cSize = container.getSize();
+		Point cLocat = container.getLocation();//取得 JPanel物件 的左上角座標 (x, y)
+		Dimension cSize = container.getSize();//取得 JPanel 的寬度 (width) 和高度 (height)
 		if (point.x >= cLocat.x && point.y >= cLocat.y)
 		{
 			if (point.x <= cLocat.x + cSize.width
@@ -428,10 +428,10 @@ public class CanvasPanelHandler extends PanelHandler
 
 	public boolean isInside(JPanel container, JPanel test)
 	{
-		Point cLocat = container.getLocation();
-		Dimension cSize = container.getSize();
-		Point tLocat = test.getLocation();
-		Dimension tSize = test.getSize();
+		Point cLocat = container.getLocation();//取得 container 的左上角 (x, y) 座標
+		Dimension cSize = container.getSize();//取得 container 的寬度 (width) 和高度 (height)。
+		Point tLocat = test.getLocation();//取得 test 的左上角 (x, y) 座標。
+		Dimension tSize = test.getSize();//取得 test 的寬度 (width) 和高度 (height)。
 		if (cLocat.x <= tLocat.x && cLocat.y <= tLocat.y)
 		{
 			if (cLocat.x + cSize.width >= tLocat.x + tSize.width

@@ -21,10 +21,10 @@ public class DependencyLine extends JPanel
         implements IFuncComponent, ILinePainter
 {
     JPanel				from;
-    int					fromSide;
-    Point				fp				= new Point(0, 0);
     JPanel				to;
+    int					fromSide;
     int					toSide;
+    Point				fp				= new Point(0, 0);
     Point				tp				= new Point(0, 0);
     int					arrowSize		= 6;
     int					panelExtendSize	= 10;
@@ -47,10 +47,8 @@ public class DependencyLine extends JPanel
         Point fpPrime;
         Point tpPrime;
         renewConnect();
-        fpPrime = new Point(fp.x - this.getLocation().x,
-                fp.y - this.getLocation().y);
-        tpPrime = new Point(tp.x - this.getLocation().x,
-                tp.y - this.getLocation().y);
+        fpPrime = new Point(fp.x - this.getLocation().x, fp.y - this.getLocation().y);
+        tpPrime = new Point(tp.x - this.getLocation().x, tp.y - this.getLocation().y);
 
         // 轉換為 Graphics2D 以使用進階繪圖功能
         Graphics2D g2d = (Graphics2D) g;
@@ -60,7 +58,7 @@ public class DependencyLine extends JPanel
 
         // 設定虛線筆觸
         BasicStroke dashedStroke = new BasicStroke(
-                1.0f,                  // 線條寬度
+                1.0f,            // 線條寬度
                 BasicStroke.CAP_BUTT,  // 線端樣式
                 BasicStroke.JOIN_MITER,// 線條連接處樣式
                 10.0f,                 // 連接處限制
@@ -131,17 +129,15 @@ public class DependencyLine extends JPanel
     @Override
     public void setConnect(DragPack dPack)
     {
-        Point mfp = dPack.getFrom();
-        Point mtp = dPack.getTo();
-        from = (JPanel) dPack.getFromObj();
-        to = (JPanel) dPack.getToObj();
-        fromSide = new AreaDefine().getArea(from.getLocation(), from.getSize(),
-                mfp);
-        toSide = new AreaDefine().getArea(to.getLocation(), to.getSize(), mtp);
+        Point mfp = dPack.getFrom();//來源座標
+        Point mtp = dPack.getTo();//目的座標
+        from = (JPanel) dPack.getFromObj();//來源物件
+        to = (JPanel) dPack.getToObj();//目的物件
+        fromSide = new AreaDefine().getArea(from.getLocation(), from.getSize(), mfp);//來源邊
+        toSide = new AreaDefine().getArea(to.getLocation(), to.getSize(), mtp);//目的邊
         renewConnect();
         System.out.println("from side " + fromSide);
         System.out.println("to side " + toSide);
-        ;
     }
 
     void renewConnect()

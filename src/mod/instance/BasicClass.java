@@ -107,7 +107,7 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 
 	public void setSelect(boolean isSelect)
 	{
-		System.out.println(isSelect);
+		System.out.println("BasicClass Selected:"+isSelect);
 		this.isSelect = isSelect;
 	}
 
@@ -116,14 +116,14 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 	{
 		gra.setColor(Color.BLACK);
 		gra.fillRect(this.getWidth() / 2 - selectBoxSize, 0, selectBoxSize * 2,
-				selectBoxSize);
+				selectBoxSize);//頂部
 		gra.fillRect(this.getWidth() / 2 - selectBoxSize,
 				this.getHeight() - selectBoxSize, selectBoxSize * 2,
-				selectBoxSize);
+				selectBoxSize);//底部
 		gra.fillRect(0, this.getHeight() / 2 - selectBoxSize, selectBoxSize,
-				selectBoxSize * 2);
+				selectBoxSize * 2);//左邊
 		gra.fillRect(this.getWidth() - selectBoxSize,
 				this.getHeight() / 2 - selectBoxSize, selectBoxSize,
-				selectBoxSize * 2);
+				selectBoxSize * 2);//右邊
 	}
 }

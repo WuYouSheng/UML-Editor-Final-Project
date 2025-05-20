@@ -35,7 +35,7 @@ public class DependencyLine extends JPanel
     int				    selectBoxSize		= 5;
     CanvasPanelHandler	cph;
     float[]				dashPattern		    = {5.0f, 5.0f};  // 虛線樣式的模式，5個像素實線，5個像素空白
-    boolean             connectPortSelect   = false; //確認Port是否被點擊
+    //boolean             connectPortSelect   = false; //確認Port是否被點擊
     private Color       lineColor           = Color.BLACK; // 新增顏色變數，預設為黑色
 
 
@@ -64,7 +64,7 @@ public class DependencyLine extends JPanel
             tempHeight = selectBoxSize*2 + deviation_value;
         }
 
-
+        // 判斷線條初始位置跟結束位置是否為連接點區塊內
         if (cph.isInside(cph.getConnectPortSelectedLocation(),fp,tempWidth,tempHeight) && cph.getSelectCompNumber()!=0){
             this.lineColor = Color.RED;
         }
@@ -75,7 +75,7 @@ public class DependencyLine extends JPanel
             this.lineColor = Color.BLACK;
         }
 
-        System.out.println("Current connectPortSelect: "+this.connectPortSelect);
+//        System.out.println("Current connectPortSelect: "+this.connectPortSelect);
         Point fpPrime;
         Point tpPrime;
         renewConnect();
@@ -152,8 +152,10 @@ public class DependencyLine extends JPanel
                 break;
         }
         Polygon polygon = new Polygon(x, y, x.length);
-        g.setColor(lineColor);
+        g.setColor(Color.WHITE);
         g.fillPolygon(polygon);
+        g.setColor(lineColor);
+        g.drawPolygon(polygon);
     }
 
     @Override
@@ -251,44 +253,44 @@ public class DependencyLine extends JPanel
     {
         this.isSelect = isSelect;
     }
-    public boolean isConnectPort(DragPack dPack,Point point){
-        JPanel Object = (JPanel) dPack.getFromObj();//取得來源物件
-        Map<String,Integer> port_member = new HashMap<>();
-        Point cLocat = Object.getLocation();//取得 container 的左上角 (x, y) 座標
-        Dimension cSize = Object.getSize();//取得 container 的寬度 (width) 和高度 (height)
-
-        Point TOP_CENTER = new Point(0,0);
-        Point BOTTOM_CENTER = new Point(0,0);
-        Point LEFT_CENTER = new Point(0,0);
-        Point RIGHT_CENTER = new Point(0,0);
-
-        TOP_CENTER.x = cLocat.x + cSize.width/2 - selectBoxSize;
-        TOP_CENTER.y = cLocat.y - selectBoxSize/2;
-        boolean TOP_flag = borderCheck(TOP_CENTER,point,selectBoxSize*2,selectBoxSize);
-
-        BOTTOM_CENTER.x = TOP_CENTER.x;
-        BOTTOM_CENTER.y = cLocat.y + cSize.height - selectBoxSize/2;
-        boolean BOTTOM_flag = borderCheck(BOTTOM_CENTER,point,selectBoxSize*2,selectBoxSize);
-
-        LEFT_CENTER.x = cLocat.x - selectBoxSize/2;
-        LEFT_CENTER.y = cLocat.y + cSize.height/2 - selectBoxSize;
-        boolean LEFT_flag = borderCheck(LEFT_CENTER, point, selectBoxSize,selectBoxSize*2);
-
-        RIGHT_CENTER.x = cLocat.x + cSize.width - selectBoxSize/2;
-        RIGHT_CENTER.y = LEFT_CENTER.y;
-        boolean RIGHT_flag = borderCheck(RIGHT_CENTER, point, selectBoxSize,selectBoxSize*2);
-
-        return TOP_flag || BOTTOM_flag || LEFT_flag || RIGHT_flag;
-    }
-    private boolean borderCheck(Point left_top, Point point, int border_width, int border_height){
-        if (point.x >= left_top.x && point.y >= left_top.y)
-        {
-            if (point.x <= left_top.x + border_width
-                    && point.y <= left_top.y + border_height)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean isConnectPort(DragPack dPack,Point point){
+//        JPanel Object = (JPanel) dPack.getFromObj();//取得來源物件
+//        Map<String,Integer> port_member = new HashMap<>();
+//        Point cLocat = Object.getLocation();//取得 container 的左上角 (x, y) 座標
+//        Dimension cSize = Object.getSize();//取得 container 的寬度 (width) 和高度 (height)
+//
+//        Point TOP_CENTER = new Point(0,0);
+//        Point BOTTOM_CENTER = new Point(0,0);
+//        Point LEFT_CENTER = new Point(0,0);
+//        Point RIGHT_CENTER = new Point(0,0);
+//
+//        TOP_CENTER.x = cLocat.x + cSize.width/2 - selectBoxSize;
+//        TOP_CENTER.y = cLocat.y - selectBoxSize/2;
+//        boolean TOP_flag = borderCheck(TOP_CENTER,point,selectBoxSize*2,selectBoxSize);
+//
+//        BOTTOM_CENTER.x = TOP_CENTER.x;
+//        BOTTOM_CENTER.y = cLocat.y + cSize.height - selectBoxSize/2;
+//        boolean BOTTOM_flag = borderCheck(BOTTOM_CENTER,point,selectBoxSize*2,selectBoxSize);
+//
+//        LEFT_CENTER.x = cLocat.x - selectBoxSize/2;
+//        LEFT_CENTER.y = cLocat.y + cSize.height/2 - selectBoxSize;
+//        boolean LEFT_flag = borderCheck(LEFT_CENTER, point, selectBoxSize,selectBoxSize*2);
+//
+//        RIGHT_CENTER.x = cLocat.x + cSize.width - selectBoxSize/2;
+//        RIGHT_CENTER.y = LEFT_CENTER.y;
+//        boolean RIGHT_flag = borderCheck(RIGHT_CENTER, point, selectBoxSize,selectBoxSize*2);
+//
+//        return TOP_flag || BOTTOM_flag || LEFT_flag || RIGHT_flag;
+//    }
+//    private boolean borderCheck(Point left_top, Point point, int border_width, int border_height){
+//        if (point.x >= left_top.x && point.y >= left_top.y)
+//        {
+//            if (point.x <= left_top.x + border_width
+//                    && point.y <= left_top.y + border_height)
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

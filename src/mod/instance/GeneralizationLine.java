@@ -19,16 +19,18 @@ public class GeneralizationLine extends JPanel
 		implements IFuncComponent, ILinePainter
 {
 	JPanel				from;
-	int					fromSide;
-	Point				fp				= new Point(0, 0);
 	JPanel				to;
+	int					fromSide;
 	int					toSide;
+	Point				fp				= new Point(0, 0);
 	Point				tp				= new Point(0, 0);
 	int					arrowSize		= 6;
 	int					panelExtendSize	= 10;
 	boolean				isSelect		= false;
 	int					selectBoxSize	= 5;
+	int				    deviation_value		= 2; //selectBoxSize容許誤差
 	CanvasPanelHandler	cph;
+	private Color       lineColor           = Color.BLACK; // 新增顏色變數，預設為黑色
 
 	public GeneralizationLine(CanvasPanelHandler cph)
 	{
@@ -41,6 +43,31 @@ public class GeneralizationLine extends JPanel
 	@Override
 	public void paintComponent(Graphics g)
 	{
+		String getConnectorDirection = cph.getConnectorPortSelectedDirection();
+		int tempWidth = 0;
+		int tempHeight = 0;
+
+		//先取得連接點的大小長度
+		if (getConnectorDirection=="TOP" || getConnectorDirection=="BOTTOM"){
+			tempWidth = selectBoxSize*2 + deviation_value;
+			tempHeight = selectBoxSize + deviation_value;
+		}
+		else{
+			tempWidth = selectBoxSize + deviation_value;
+			tempHeight = selectBoxSize*2 + deviation_value;
+		}
+
+		// 判斷線條初始位置跟結束位置是否為連接點區塊內
+		if (cph.isInside(cph.getConnectPortSelectedLocation(),fp,tempWidth,tempHeight) && cph.getSelectCompNumber()!=0){
+			this.lineColor = Color.RED;
+		}
+		else if (cph.isInside(cph.getConnectPortSelectedLocation(),tp,tempWidth,tempHeight) && cph.getSelectCompNumber()!=0){
+			this.lineColor = Color.RED;
+		}
+		else{
+			this.lineColor = Color.BLACK;
+		}
+
 		Point fpPrime;
 		Point tpPrime;
 		renewConnect();
@@ -48,7 +75,7 @@ public class GeneralizationLine extends JPanel
 				fp.y - this.getLocation().y);
 		tpPrime = new Point(tp.x - this.getLocation().x,
 				tp.y - this.getLocation().y);
-		g.setColor(Color.BLACK);
+		g.setColor(lineColor);
 		g.drawLine(fpPrime.x, fpPrime.y, tpPrime.x, tpPrime.y);
 		paintArrow(g, tpPrime);
 		if (isSelect)
@@ -99,7 +126,7 @@ public class GeneralizationLine extends JPanel
 		Polygon polygon = new Polygon(x, y, x.length);
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygon);
-		g.setColor(Color.BLACK);
+		g.setColor(lineColor);
 		g.drawPolygon(polygon);
 	}
 

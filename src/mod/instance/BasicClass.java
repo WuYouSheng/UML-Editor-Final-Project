@@ -17,7 +17,6 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 	int					textShiftX			= 5;
 	boolean				isSelect			= false;
 	boolean				connectPortSelect	= false;
-	Point				connectPoint		= new Point(0,0);
 	int					selectBoxSize		= 5;
 	CanvasPanelHandler	cph;
 
@@ -107,11 +106,10 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 
 	public void setSelect(boolean isSelect)
 	{
-		System.out.println("BasicClass Selected:"+isSelect);
 		this.isSelect = isSelect;
 	}
 	public void setConnectPortSelect(String ConnectPort){
-		System.out.println("Basic Class"+ConnectPort);
+		//System.out.println("Basic Class"+ConnectPort);
 		if (ConnectPort == "None"){
 			this.connectPortSelect = false;
 		}
@@ -120,10 +118,6 @@ public class BasicClass extends JPanel implements IFuncComponent, IClassPainter
 		}
 		//System.out.println(point);
 	}
-	public boolean ConnectPortSelect(){
-		return this.connectPortSelect;
-	}
-
 	@Override
 	public void paintSelect(Graphics gra)
 	{

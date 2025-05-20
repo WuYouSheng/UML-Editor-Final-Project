@@ -77,6 +77,8 @@ public class CanvasPanelHandler extends PanelHandler
 
 	public void ActionPerformed(DragPack dp)
 	{
+		this.tempPoint.x = 0;
+		this.tempPoint.y = 0;
 		switch (core.getCurrentFuncIndex())
 		{
 			case 0:
@@ -118,16 +120,14 @@ public class CanvasPanelHandler extends PanelHandler
 				switch (core.isFuncComponent(members.elementAt(i)))
 				{
 					case 0:
-						//System.out.println("Port : "+isConnectPort(members.elementAt(i),e.getPoint()));
 						((BasicClass) members.elementAt(i)).setSelect(true);
 						((BasicClass) members.elementAt(i)).setConnectPortSelect(isConnectPort(members.elementAt(i),e.getPoint()));
 						selectComp.add(members.elementAt(i));
 						isSelect = true;
 						break;
 					case 1:
-						//System.out.println("Port : "+isConnectPort(members.elementAt(i),e.getPoint()));
 						((UseCase) members.elementAt(i)).setSelect(true);
-						//((UseCase) members.elementAt(i)).setConnectPortSelect(isConnectPort(members.elementAt(i),e.getPoint()));
+						((UseCase) members.elementAt(i)).setConnectPortSelect(isConnectPort(members.elementAt(i),e.getPoint()));
 						selectComp.add(members.elementAt(i));
 						isSelect = true;
 						break;

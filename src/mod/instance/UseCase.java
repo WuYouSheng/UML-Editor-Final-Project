@@ -18,6 +18,7 @@ public class UseCase extends JPanel implements IFuncComponent, IClassPainter
 	int					maxLength		= 20;
 	boolean				isSelect		= false;
 	int					selectBoxSize	= 5;
+	boolean				connectPortSelect	= false;
 	CanvasPanelHandler	cph;
 
 	public UseCase(CanvasPanelHandler cph)
@@ -65,6 +66,16 @@ public class UseCase extends JPanel implements IFuncComponent, IClassPainter
 	public void setSelect(boolean isSelect)
 	{
 		this.isSelect = isSelect;
+	}
+	public void setConnectPortSelect(String ConnectPort){
+		//System.out.println("UseCase "+ConnectPort);
+		if (ConnectPort == "None"){
+			this.connectPortSelect = false;
+		}
+		else{
+			this.connectPortSelect = true;
+		}
+		//System.out.println(point);
 	}
 
 	@Override
